@@ -1,0 +1,10 @@
+@WebAPI_HostAddress = http://localhost:44369
+
+POST {{WebAPI_HostAddress}}/
+Content-Type: application/json
+
+{
+    "name": "Test",
+    "description": "Test description",
+}
+###
