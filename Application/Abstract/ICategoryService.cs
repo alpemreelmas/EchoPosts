@@ -10,5 +10,7 @@ namespace Applciation.Abstract
         IDataResult<Category> GetById(int categoryId);
         IDataResult<Category> GetBySlug(string categorySlug);
         IResult Store(CategoryStoreDto categoryStoreDto);
+        IResult Update(CategoryUpdateDto categoryUpdateDto, int i);
+        IResult Remove(int id);
     }
 }
