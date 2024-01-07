@@ -1,6 +1,7 @@
 ﻿using Applciation.Abstract;
 using Application.Dtos;
 using Core.Entities.Concrete;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Persistence.Abstract;
@@ -42,6 +43,14 @@ namespace Application.Concrete
 
         public IResult Store(CategoryStoreDto categoryStoreDto)
         {
+            var existCategory = _categoryDal.Get(c => c.Name == categoryStoreDto.Name);
+
+            if (existCategory is not null)
+            {
+                return new ErrorResult("You cannot add category already exist.");
+            }
+
+
             Category category = new Category
             {
                 Name = categoryStoreDto.Name,
@@ -56,10 +65,21 @@ namespace Application.Concrete
 
         public IResult Update(CategoryUpdateDto categoryUpdateDto, int id)
         {
+            // to make it more clear defined a multiple bussines rule runner.
+            var existCategory = _categoryDal.Get(c => c.Name == categoryUpdateDto.Name && c.Id != id);
+
+            if(existCategory is not null)
+            {
+                return new ErrorResult("You cannot add category already exist.");
+            }
+
+            // accesing db and getting category object
+            // TODO check if I make this more clean like AutoMapper without having performance issue
             var category = _categoryDal.Get(c => c.Id == id);
             category.Description = categoryUpdateDto.Description;
             category.Name= categoryUpdateDto.Name;
             _categoryDal.Update(category);
+
             return new SuccessDataResult<Category>(category);
         }
     }

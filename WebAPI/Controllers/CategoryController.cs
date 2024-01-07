@@ -40,10 +40,16 @@ namespace WebAPI.Controllers
         [Authorize]
         [HttpPost("/")]
         [ValidationAspect(typeof(CategoryStoreValidator))]
-        public IResult Store([FromBody] CategoryStoreDto categoryStoreDto)
+        public IActionResult Store([FromBody] CategoryStoreDto categoryStoreDto)
         {
             var result = _categoryService.Store(categoryStoreDto);
-            return new SuccessResult(result.Message);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
         }
 
         [Authorize]
@@ -64,10 +70,16 @@ namespace WebAPI.Controllers
 
         [Authorize]
         [HttpPut("/{id}")]
-        public IResult Update([FromBody] CategoryUpdateDto categoryUpdateDto, int id)
+        public IActionResult Update([FromBody] CategoryUpdateDto categoryUpdateDto, int id)
         {
             var result = _categoryService.Update(categoryUpdateDto,id);
-            return new SuccessResult(result.Message);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+
         }
     }
 }
